@@ -1,3 +1,0 @@
-#!/bin/bash
-
-eval $(xrectsel) && notify-send "Recording Started" && byzanz-record -d $1 --delay=0 -x ${X} -y ${Y} -w ${WIDTH} -h ${HEIGHT} ~/recording.gif && notify-send "Recording completed and saved to ~/recording.gif"

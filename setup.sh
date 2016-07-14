@@ -1,5 +1,4 @@
 #!/bin/bash
-gcc xrectsel.c -lX11 -o ~/bin/xrectsel
-cp xrecordgif ~/bin/
-chmod +x ~/bin/xrectsel
+rm ~/bin/xrecordgif -f
+gcc xrectsel.c -lX11 -o ~/bin/xrecordgif `pkg-config --cflags --libs libnotify`
 chmod +x ~/bin/xrecordgif

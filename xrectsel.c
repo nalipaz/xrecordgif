@@ -3,6 +3,7 @@
 #include<X11/Xlib.h>
 #include<X11/cursorfont.h>
 #include<unistd.h> // added for sleep/usleep
+#include <libnotify/notify.h>
 
 // original from [https://bbs.archlinux.org/viewtopic.php?id=85378 Select a screen area with mouse and return the geometry of this area? / Programming & Scripting / Arch Linux Forums]
 // build with (Ubuntu 14.04):
@@ -11,6 +12,8 @@
 int main(void)
 {
   int rx = 0, ry = 0, rw = 0, rh = 0;
+  int RECTX = 0, RECTY = 0, RECTWIDTH = 0, RECTHEIGHT = 0;
+  char buf[128];
   int rect_x = 0, rect_y = 0, rect_w = 0, rect_h = 0;
   int btn_pressed = 0, done = 0;
 
@@ -102,6 +105,7 @@ int main(void)
       }
     }
   }
+
   /* clear the drawn rectangle */
   if (rect_w) {
     XDrawRectangle(disp, root, gc, rect_x, rect_y, rect_w, rect_h);
@@ -121,10 +125,26 @@ int main(void)
 
   XCloseDisplay(disp);
 
-//  printf("%dx%d+%d+%d\n",rw,rh,rx,ry);
-//  rw = rw - rx;
-//  rh = rh - ry;
-  printf("X=%d\nY=%d\nWIDTH=%d\nHEIGHT=%d\n",rx,ry,rw,rh);
+  printf("RECTX=%d\nRECTY=%d\nRECTWIDTH=%d\nRECTHEIGHT=%d\n",rx,ry,rw,rh);
+  RECTX = rx;
+  RECTY = ry;
+  RECTWIDTH = rw;
+  RECTHEIGHT = rh;
+
+  notify_init ("Screen Recording");
+  NotifyNotification * ScreenRecordingStart = notify_notification_new ("Screen Recording", "Screen Recording has started.", "dialog-information");
+  notify_notification_show (ScreenRecordingStart, NULL);
+  g_object_unref(G_OBJECT(ScreenRecordingStart));
+  notify_uninit();
+
+  snprintf(buf, sizeof(buf), "byzanz-record -d 3 --delay=0 -x %d -y %d -w %d -h %d ~/recording.gif",rx,ry,rw,rh);
+  system(buf);
+
+  notify_init ("Screen Recording");
+  NotifyNotification * ScreenRecordingStop = notify_notification_new ("Screen Recording", "Screen Recording complete, file saved to ~/recording.gif.", "dialog-information");
+  notify_notification_show (ScreenRecordingStop, NULL);
+  g_object_unref(G_OBJECT(ScreenRecordingStop));
+  notify_uninit();
 
   return EXIT_SUCCESS;
 }
