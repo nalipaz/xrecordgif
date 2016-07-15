@@ -30,4 +30,4 @@ Example:
 xrecordgif 3
 ```
 
-After running the command you need to draw a rectangle in the location of the area you wish to capture. Recording commences upon dropping the drag handle.
+After running the command you need to draw a rectangle in the location of the area you wish to capture. Recording commences upon dropping the drag handle. The gif is saved to `~/recording.gif`.
