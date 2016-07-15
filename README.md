@@ -1,7 +1,7 @@
 XRecordGIF
 ==========
 
-Performs a screen capture of a selected area on Debian creating a .gif
+Performs a screen capture of a selected area of the screen on Linux creating a .gif
 
 ## Requirements
 This has only been tested on Debian Jessie, specifically the Bunsen Labs distribution, so I can't say how well it might support other Linux distributions.
