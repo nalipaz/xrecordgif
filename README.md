@@ -1,6 +1,8 @@
 XRecordGIF
 ==========
 
+[![Join the chat at https://gitter.im/nalipaz/xrecordgif](https://badges.gitter.im/nalipaz/xrecordgif.svg)](https://gitter.im/nalipaz/xrecordgif?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Performs a screen capture of a selected area of the screen on Linux creating a .gif
 
 ## Credits
