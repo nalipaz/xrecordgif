@@ -24,7 +24,7 @@ Both the above will be installed if you don't have them when you run `./setup.sh
 Clone this gist into a temporary directory and run `./setup.sh`
 ```
 cd /tmp
-git clone https://gist.github.com/98351fa5d759a216a1836a40aa6ef8f9.git xrecordgif
+git clone https://github.com/nalipaz/xrecordgif.git
 cd xrecordgif
 ./setup.sh
 ```
