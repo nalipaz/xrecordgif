@@ -34,4 +34,4 @@ After running the command you need to draw a rectangle in the location of the ar
 
 ## Example GIF
 
-![Example GIF](/nalipaz/98351fa5d759a216a1836a40aa6ef8f9/raw/98e2048d46a386b3f5c33890be7ba09e46c068f6/zexample.gif)
+![Example GIF](/nalipaz/xrecordgif/raw/master/example.gif)
