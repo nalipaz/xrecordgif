@@ -20,7 +20,7 @@ int main(int argc, int *argv[])
   int btn_pressed = 0, done = 0;
 
   notify_init ("Screen Recording Notification");
-  NotifyNotification * ScreenRecording = notify_notification_new ("Screen Recording", "Screen Recording has started...", "dialog-information");
+  NotifyNotification * ScreenRecording = notify_notification_new ("Screen Recording", "Screen Recording in progress...", "dialog-information");
   notify_notification_set_timeout (ScreenRecording, 0);
 
   XEvent ev;
