@@ -20,7 +20,7 @@ git clone https://gist.github.com/98351fa5d759a216a1836a40aa6ef8f9.git xrecordgi
 cd xrecordgif
 ./setup.sh
 ```
-
+If `~/bin` is in your `PATH` (I recommend this practice) then the script should then be immediately available.
 ## Usage
 
 The script takes one argument, the number of seconds you wish to record.
