@@ -1,21 +1,27 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<X11/Xlib.h>
-#include<X11/cursorfont.h>
-#include<unistd.h> // added for sleep/usleep
+#include <stdio.h>
+#include <stdlib.h>
+#include <X11/Xlib.h>
+#include <X11/cursorfont.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <libnotify/notify.h>
 
-// original from [https://bbs.archlinux.org/viewtopic.php?id=85378 Select a screen area with mouse and return the geometry of this area? / Programming & Scripting / Arch Linux Forums]
-// build with (Ubuntu 14.04):
-// gcc -Wall xrectsel.c -o xrectsel -lX11
+extern int rx, ry, rw, rh;
 
-int main(void)
+int main(int argc, int *argv[])
 {
+  pid_t rectangle_child_pid, rectangle_pid;
+  pid_t byzanz_child_pid, byzanz_pid;
+  int rectangle_status;
+  int byzanz_status;
   int rx = 0, ry = 0, rw = 0, rh = 0;
-  int RECTX = 0, RECTY = 0, RECTWIDTH = 0, RECTHEIGHT = 0;
-  char buf[128];
   int rect_x = 0, rect_y = 0, rect_w = 0, rect_h = 0;
   int btn_pressed = 0, done = 0;
+
+  notify_init ("Screen Recording Notification");
+  NotifyNotification * ScreenRecording = notify_notification_new ("Screen Recording", "Screen Recording has started...", "dialog-information");
+  notify_notification_set_timeout (ScreenRecording, 0);
 
   XEvent ev;
   Display *disp = XOpenDisplay(NULL);
@@ -44,6 +50,11 @@ int main(void)
   gc = XCreateGC(disp, root,
                  GCFunction | GCForeground | GCBackground | GCSubwindowMode,
                  &gcval);
+
+  if (argc < 2) {
+    printf("You must pass a duration for the recording.\n");
+    return EXIT_FAILURE;
+  }
 
   /* this XGrab* stuff makes XPending true ? */
   if ((XGrabPointer
@@ -106,11 +117,6 @@ int main(void)
     }
   }
 
-  /* clear the drawn rectangle */
-  if (rect_w) {
-    XDrawRectangle(disp, root, gc, rect_x, rect_y, rect_w, rect_h);
-    XFlush(disp);
-  }
   rw = ev.xbutton.x - rx;
   rh = ev.xbutton.y - ry;
   /* cursor moves backwards */
@@ -123,28 +129,39 @@ int main(void)
     rh = 0 - rh;
   }
 
+  /* clear the drawn rectangle */
+  if (rect_w) {
+    XDrawRectangle(disp, root, gc, rect_x, rect_y, rect_w, rect_h);
+    XFlush(disp);
+  }
+
   XCloseDisplay(disp);
 
-  printf("RECTX=%d\nRECTY=%d\nRECTWIDTH=%d\nRECTHEIGHT=%d\n",rx,ry,rw,rh);
-  RECTX = rx;
-  RECTY = ry;
-  RECTWIDTH = rw;
-  RECTHEIGHT = rh;
+  if (rw > 0 && rh > 0) {
+    notify_notification_show (ScreenRecording, NULL);
+    byzanz_child_pid = fork();
+    if (byzanz_child_pid == 0) {
+      byzanz_pid = getpid();
 
-  notify_init ("Screen Recording");
-  NotifyNotification * ScreenRecordingStart = notify_notification_new ("Screen Recording", "Screen Recording has started.", "dialog-information");
-  notify_notification_show (ScreenRecordingStart, NULL);
-  g_object_unref(G_OBJECT(ScreenRecordingStart));
-  notify_uninit();
+      char buf[128];
+      snprintf(buf, sizeof(buf), "byzanz-record -d %s --delay=0 -x %d -y %d -w %d -h %d ~/recording.gif",argv[1],rx,ry,rw,rh);
+      system(buf);
 
-  snprintf(buf, sizeof(buf), "byzanz-record -d 3 --delay=0 -x %d -y %d -w %d -h %d ~/recording.gif",rx,ry,rw,rh);
-  system(buf);
+      return EXIT_SUCCESS;
+    }
+  }
 
-  notify_init ("Screen Recording");
-  NotifyNotification * ScreenRecordingStop = notify_notification_new ("Screen Recording", "Screen Recording complete, file saved to ~/recording.gif.", "dialog-information");
-  notify_notification_show (ScreenRecordingStop, NULL);
-  g_object_unref(G_OBJECT(ScreenRecordingStop));
-  notify_uninit();
+  if (byzanz_pid > 0) {
+    byzanz_pid = wait(&byzanz_status);
+
+    if ( WIFEXITED(byzanz_status) ) {
+      notify_notification_update (ScreenRecording, "Screen Recording", "Screen Recording complete, file saved to ~/recording.gif.", "dialog-information");
+      notify_notification_set_timeout (ScreenRecording, NOTIFY_EXPIRES_DEFAULT);
+      notify_notification_show (ScreenRecording, NULL);
+      g_object_unref(G_OBJECT(ScreenRecording));
+      notify_uninit();
+    }
+  }
 
   return EXIT_SUCCESS;
 }
