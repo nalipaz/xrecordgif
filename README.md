@@ -32,4 +32,6 @@ xrecordgif 3
 
 After running the command you need to draw a rectangle in the location of the area you wish to capture. Recording commences upon dropping the drag handle. The gif is saved to `~/recording.gif`.
 
+## Example GIF
+
 ![Example GIF](/nalipaz/98351fa5d759a216a1836a40aa6ef8f9/raw/67dd4b87f50e1cb351fa5e5330aa62fbe8abf01a/example.gif)
