@@ -3,6 +3,14 @@ XRecordGIF
 
 Performs a screen capture of a selected area of the screen on Linux creating a .gif
 
+## Credits
+A lot of this code was taken from publically available places on the web.
+
+[sdbbs on askubuntu.com](http://askubuntu.com/questions/487725/how-can-i-draw-selection-rectangle-on-screen-for-my-script): The screen drawing for obtaining coordinates of the rectangle.  
+[lolilolicon & HashBox on archlinux boards](https://bbs.archlinux.org/viewtopic.php?id=85378): The original source-code for the screen drawing that sdbbs modified and subsequently posted.
+[wiki.archlinux.org](https://wiki.archlinux.org/index.php/Desktop_notifications): The users whom contributed to the section on how to use libnotify within C.
+Various C programming tutorials: Being this is my first project in C I learned a lot on various other sites.
+
 ## Requirements
 This has only been tested on Debian Jessie, specifically the Bunsen Labs distribution, so I can't say how well it might support other Linux distributions.
 
